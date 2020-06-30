@@ -1,7 +1,7 @@
 package jPanel;
 
 import javax.swing.JPanel;
-import constants.Utils;
+import constants.Usual;
 
 public class MainJPanel extends JPanel{
 	
@@ -30,7 +30,7 @@ public class MainJPanel extends JPanel{
 	
 	public MainJPanel() {
 		setVisible(true);
-		setBounds(0, Utils.BOARD_SIZE_Y, Utils.FRAME_WIDTH, Utils.FRAME_HEIGHT);
+		setBounds(0, Usual.BOARD_SIZE_Y, Usual.FRAME_WIDTH, Usual.FRAME_HEIGHT);
 		setLayout(null);
 		setVisible(true);
 		szys();

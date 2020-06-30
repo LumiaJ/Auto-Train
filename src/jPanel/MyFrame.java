@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-import constants.Utils;
+import constants.Usual;
 
 public class MyFrame extends JFrame{
 	/**
@@ -25,9 +25,9 @@ public class MyFrame extends JFrame{
 		
 		setTitle("数资快速计算练习");
 		setResizable(false);
-		setBounds((int) screensize.getWidth() / 2 - Utils.FRAME_WIDTH/2,
-				(int) screensize.getHeight() / 2 - Utils.FRAME_HEIGHT/2,
-				Utils.FRAME_WIDTH, Utils.FRAME_HEIGHT);
+		setBounds((int) screensize.getWidth() / 2 - Usual.FRAME_WIDTH/2,
+				(int) screensize.getHeight() / 2 - Usual.FRAME_HEIGHT/2,
+				Usual.FRAME_WIDTH, Usual.FRAME_HEIGHT);
 		setVisible(true);
 		setLayout(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import constants.Utils;
+import constants.Usual;
 
 public class Szys_F extends JPanel{
 	/**
@@ -23,7 +23,7 @@ public class Szys_F extends JPanel{
 	 */
 	private static final long serialVersionUID = 1L;
 	private JLabel tm = new JLabel();
-	private JLabel[] menu = new JLabel[Utils.SZYS_MENU.length];
+	private JLabel[] menu = new JLabel[Usual.SZYS_MENU.length];
 	private JLabel result = new JLabel();
 	private JTextField jtf0 = new JTextField();
 	private JTextField jtfcount = new JTextField();
@@ -36,7 +36,7 @@ public class Szys_F extends JPanel{
 	
 	
 	public void start() {
-		setBounds(0, 0, Utils.FRAME_WIDTH, Utils.FRAME_HEIGHT);
+		setBounds(0, 0, Usual.FRAME_WIDTH, Usual.FRAME_HEIGHT);
 		setVisible(true);
 		setLayout(null);
 		setJButton();
@@ -90,15 +90,15 @@ public class Szys_F extends JPanel{
 		String resultStr = "";
 		if(questions.get(nowtm-1).isRight()) {
 			result.setForeground(Color.BLACK);
-			resultStr += Utils.DUI;
+			resultStr += Usual.DUI;
 		}else {
 			result.setForeground(Color.RED);
-			resultStr += Utils.CUO;
+			resultStr += Usual.CUO;
 			resultStr += questions.get(nowtm-1).getTm()+questions.get(nowtm-1).getAnswer();
 		}
 		resultStr += "本题耗时:" + questions.get(nowtm-1).getTime()/1000.0 + "s"; 
-		result.setFont(Utils.FONT);
-		result.setBounds(0,Utils.SIZE_Y[5],Utils.FRAME_WIDTH,Utils.O_H_HEIGHT*2);
+		result.setFont(Usual.FONT);
+		result.setBounds(0,Usual.SIZE_Y[5],Usual.FRAME_WIDTH,Usual.O_H_HEIGHT*2);
 		result.setText(resultStr);
 		result.setHorizontalAlignment(JLabel.CENTER);
 	}
@@ -108,11 +108,11 @@ public class Szys_F extends JPanel{
 	 * 开始做题按钮
 	 */
 	private void setJButton() {
-		start.setFont(Utils.FONT);
+		start.setFont(Usual.FONT);
 		start.setVisible(true);
 		start.setText("开始做题");
-		start.setBounds(Utils.FRAME_WIDTH/2-Utils.SZYS_START_BUTTON_WID/2,
-				Utils.SIZE_Y[4],Utils.SZYS_START_BUTTON_WID, Utils.O_H_HEIGHT);
+		start.setBounds(Usual.FRAME_WIDTH/2-Usual.SZYS_START_BUTTON_WID/2,
+				Usual.SIZE_Y[4],Usual.SZYS_START_BUTTON_WID, Usual.O_H_HEIGHT);
 		start.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -162,7 +162,7 @@ public class Szys_F extends JPanel{
 				answer = String.format("%.2f", (num1*1.0/num2));
 				break;
 			}
-			questions.add(new Question(i, q, answer));
+			questions.add(new Question(q, answer, 0));
 		}
 	}
 	
@@ -170,10 +170,10 @@ public class Szys_F extends JPanel{
 	 * 答案输入框设置
 	 */
 	private void setSubmit() {
-		jtf0.setFont(Utils.FONT);
+		jtf0.setFont(Usual.FONT);
 		jtf0.setHorizontalAlignment(JTextField.CENTER);
-		jtf0.setBounds(Utils.FRAME_WIDTH/2-Utils.SZYS_TEXT_SUB_WID/2, Utils.SIZE_Y[3],
-				Utils.SZYS_TEXT_SUB_WID, Utils.O_H_HEIGHT);
+		jtf0.setBounds(Usual.FRAME_WIDTH/2-Usual.SZYS_TEXT_SUB_WID/2, Usual.SIZE_Y[3],
+				Usual.SZYS_TEXT_SUB_WID, Usual.O_H_HEIGHT);
 		jtf0.setEnabled(true);
 		jtf0.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
@@ -217,19 +217,19 @@ public class Szys_F extends JPanel{
 	 * 参数输入框设置
 	 */
 	private void setJTextField() {
-		jtfcount.setFont(Utils.FONT);
+		jtfcount.setFont(Usual.FONT);
 		jtfcount.setHorizontalAlignment(JTextField.CENTER);
-		jtfcount.setBounds(50, Utils.SIZE_Y[1], Utils.SZYS_TEXT_SUB_WID, Utils.O_H_HEIGHT);
+		jtfcount.setBounds(50, Usual.SIZE_Y[1], Usual.SZYS_TEXT_SUB_WID, Usual.O_H_HEIGHT);
 		jtfcount.setEnabled(true);
 
-		jtfmin.setFont(Utils.FONT);
+		jtfmin.setFont(Usual.FONT);
 		jtfmin.setHorizontalAlignment(JTextField.CENTER);
-		jtfmin.setBounds(250, Utils.SIZE_Y[1], Utils.SZYS_TEXT_SUB_WID, Utils.O_H_HEIGHT);
+		jtfmin.setBounds(250, Usual.SIZE_Y[1], Usual.SZYS_TEXT_SUB_WID, Usual.O_H_HEIGHT);
 		jtfmin.setEnabled(true);
 
-		jtfmax.setFont(Utils.FONT);
+		jtfmax.setFont(Usual.FONT);
 		jtfmax.setHorizontalAlignment(JTextField.CENTER);
-		jtfmax.setBounds(450, Utils.SIZE_Y[1], Utils.SZYS_TEXT_SUB_WID, Utils.O_H_HEIGHT);
+		jtfmax.setBounds(450, Usual.SIZE_Y[1], Usual.SZYS_TEXT_SUB_WID, Usual.O_H_HEIGHT);
 		jtfmax.setEnabled(true);
 	}
 	
@@ -238,9 +238,9 @@ public class Szys_F extends JPanel{
 	 */
 	private void setMenu() {
 		for(int i = 0; i<menu.length;i++) {
-			menu[i] = new JLabel(Utils.SZYS_MENU[i]);
-			menu[i].setFont(Utils.FONT);
-			menu[i].setBounds(i*200+50,Utils.SIZE_Y[0],Utils.SZYS_MENU_WID,Utils.O_H_HEIGHT);
+			menu[i] = new JLabel(Usual.SZYS_MENU[i]);
+			menu[i].setFont(Usual.FONT);
+			menu[i].setBounds(i*200+50,Usual.SIZE_Y[0],Usual.SZYS_MENU_WID,Usual.O_H_HEIGHT);
 			menu[i].setHorizontalAlignment(JLabel.CENTER);
 		}
 	}
@@ -249,8 +249,8 @@ public class Szys_F extends JPanel{
 	 * 题目文本设置
 	 */
 	private void setTm() {
-		tm.setFont(Utils.FONT);
-		tm.setBounds(0,Utils.SIZE_Y[2],Utils.FRAME_WIDTH,Utils.O_H_HEIGHT);
+		tm.setFont(Usual.FONT);
+		tm.setBounds(0,Usual.SIZE_Y[2],Usual.FRAME_WIDTH,Usual.O_H_HEIGHT);
 		tm.setText(questions.get(nowtm).getTm());
 		questions.get(nowtm).setsTime(new Time(System.currentTimeMillis()));
 		nowtm++;

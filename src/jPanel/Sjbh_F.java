@@ -10,12 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import constants.Utils;
+import constants.Usual;
 
 public class Sjbh_F extends JPanel{
 	/**
@@ -23,30 +24,54 @@ public class Sjbh_F extends JPanel{
 	 */
 	private static final long serialVersionUID = 1L;
 	private JLabel tm = new JLabel();
-	private JLabel[] menu = new JLabel[Utils.SZYS_MENU.length];
+	private JLabel[] menu = new JLabel[Usual.SJBH_MENU.length];
 	private JLabel result = new JLabel();
-	private JTextField jtf0 = new JTextField();
-	private JTextField jtfcount = new JTextField();
-	private JTextField jtfmin = new JTextField();
-	private JTextField jtfmax = new JTextField();
-	private int count, min, max, nowtm;
+	private JTextField jtf0, jtfcount, jtfmin, jtfmax, jtfpr, jtfev;
+	private int count, min, max, nowtm, percentRange;
+	private double exactValue;
+	private JComboBox<String> isExact;
 	private List<Question> questions;
 	private boolean isStart = false;
 	private JButton start = new JButton();
 	
 	
 	public void start() {
-		setBounds(0, 0, Utils.FRAME_WIDTH, Utils.FRAME_HEIGHT);
+		setBounds(0, 0, Usual.FRAME_WIDTH, Usual.FRAME_HEIGHT);
 		setVisible(true);
 		setLayout(null);
 		setJButton();
 		setMenu();
+		setComboBox();
+		add(isExact);
 		setJTextField();
-		add(jtfcount);add(jtfmin);add(jtfmax);
+		add(jtfcount);add(jtfmin);add(jtfmax);add(jtfpr);add(jtfev);
 		add(start);
 		for(JLabel j : menu) {
 			add(j);
 		}
+	}
+	
+	/**
+	 * 是否需要模糊计算的下拉框选项
+	 */
+	private void setComboBox() {
+		isExact = new JComboBox<String>();
+		isExact.setFont(Usual.FONT);
+		isExact.setBounds(250, Usual.SIZE_Y[1],
+				Usual.SZYS_TEXT_SUB_WID, Usual.O_H_HEIGHT);
+		for(String s : Usual.ISEXACT_TEXT) {
+			isExact.addItem(s);
+		}
+		isExact.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(((String)isExact.getSelectedItem()).equals(Usual.ISEXACT_TEXT[0])) {
+					jtfev.setEnabled(false);
+				}else {
+					jtfev.setEnabled(true);
+				}
+			}
+		});
 	}
 	
 	/**
@@ -90,16 +115,16 @@ public class Sjbh_F extends JPanel{
 		String resultStr = "";
 		if(questions.get(nowtm-1).isRight()) {
 			result.setForeground(Color.BLACK);
-			resultStr += Utils.DUI;
+			resultStr += Usual.DUI;
 		}else {
 			result.setForeground(Color.RED);
-			resultStr += Utils.CUO;
-			resultStr += questions.get(nowtm-1).getTm()+questions.get(nowtm-1).getAnswer();
+			resultStr += Usual.CUO;
+			resultStr += "正确答案为："+questions.get(nowtm-1).getAnswer();
 		}
-		resultStr += "本题耗时:" + questions.get(nowtm-1).getTime()/1000.0 + "s"; 
-		result.setFont(Utils.FONT);
-		result.setBounds(0,Utils.SIZE_Y[5],Utils.FRAME_WIDTH,Utils.O_H_HEIGHT*2);
-		result.setText(resultStr);
+		resultStr += "\n本题耗时:" + questions.get(nowtm-1).getTime()/1000.0 + "s"; 
+		result.setFont(Usual.FONT);
+		result.setBounds(0,Usual.SIZE_Y[8],Usual.FRAME_WIDTH,Usual.O_H_HEIGHT*2);
+		result.setText("<html>"+resultStr+"</html>");
 		result.setHorizontalAlignment(JLabel.CENTER);
 	}
 	
@@ -108,11 +133,11 @@ public class Sjbh_F extends JPanel{
 	 * 开始做题按钮
 	 */
 	private void setJButton() {
-		start.setFont(Utils.FONT);
+		start.setFont(Usual.FONT);
 		start.setVisible(true);
 		start.setText("开始做题");
-		start.setBounds(Utils.FRAME_WIDTH/2-Utils.SZYS_START_BUTTON_WID/2,
-				Utils.SIZE_Y[4],Utils.SZYS_START_BUTTON_WID, Utils.O_H_HEIGHT);
+		start.setBounds(Usual.FRAME_WIDTH/2-Usual.SZYS_START_BUTTON_WID/2,
+				Usual.SIZE_Y[7],Usual.SZYS_START_BUTTON_WID, Usual.O_H_HEIGHT);
 		start.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -122,6 +147,9 @@ public class Sjbh_F extends JPanel{
 				jtfcount.setEnabled(false);
 				jtfmax.setEnabled(false);
 				jtfmin.setEnabled(false);
+				jtfpr.setEnabled(false);
+				isExact.setEnabled(false);
+				jtfev.setEnabled(false);
 				setSubmit();
 				setTm();
 				add(jtf0);
@@ -135,34 +163,20 @@ public class Sjbh_F extends JPanel{
 	 * 通过输入的参数随机生成题目
 	 */
 	private void setQuestion() {
+		//TODO
 		questions = new ArrayList<Question>();
 		count = Integer.parseInt(jtfcount.getText());
 		min = Integer.parseInt(jtfmin.getText());
 		max = Integer.parseInt(jtfmax.getText());
+		percentRange = Integer.parseInt(jtfpr.getText());
+		if(((String)isExact.getSelectedItem()).equals(Usual.ISEXACT_TEXT[0])) {
+			exactValue = 0;
+		}else {
+			exactValue = Double.parseDouble(jtfev.getText());
+		}
+		
 		for(int i = 0; i<count;i++) {
-			int num1 = (int)(Math.random()*(max-min)+min);
-			int num2 = (int)(Math.random()*(max-min)+min);
-			String q = "",answer = "";
-			int random = (int)(Math.random()*4);
-			switch(random) {
-			case 0:
-				q = num1 + " + " + num2 + " = ";
-				answer = (num1+num2)+"";
-				break;
-			case 1:
-				q = num1 + " - " + num2 + " = ";
-				answer = (num1-num2)+"";
-				break;
-			case 2:
-				q = num1 + " * " + num2 + " = ";
-				answer = (num1*num2)+"";
-				break;
-			case 3:
-				q = num1 + " / " + num2 + " = ";
-				answer = String.format("%.2f", (num1*1.0/num2));
-				break;
-			}
-			questions.add(new Question(i, q, answer));
+			questions.add(Sjbh_titles.title00(min, max, percentRange, exactValue));
 		}
 	}
 	
@@ -170,10 +184,11 @@ public class Sjbh_F extends JPanel{
 	 * 答案输入框设置
 	 */
 	private void setSubmit() {
-		jtf0.setFont(Utils.FONT);
+		jtf0 = new JTextField();
+		jtf0.setFont(Usual.FONT);
 		jtf0.setHorizontalAlignment(JTextField.CENTER);
-		jtf0.setBounds(Utils.FRAME_WIDTH/2-Utils.SZYS_TEXT_SUB_WID/2, Utils.SIZE_Y[3],
-				Utils.SZYS_TEXT_SUB_WID, Utils.O_H_HEIGHT);
+		jtf0.setBounds(Usual.FRAME_WIDTH/2-Usual.SZYS_TEXT_SUB_WID/2, Usual.SIZE_Y[6],
+				Usual.SZYS_TEXT_SUB_WID, Usual.O_H_HEIGHT);
 		jtf0.setEnabled(true);
 		jtf0.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
@@ -217,19 +232,34 @@ public class Sjbh_F extends JPanel{
 	 * 参数输入框设置
 	 */
 	private void setJTextField() {
-		jtfcount.setFont(Utils.FONT);
+		jtfcount = new JTextField();
+		jtfcount.setFont(Usual.FONT);
 		jtfcount.setHorizontalAlignment(JTextField.CENTER);
-		jtfcount.setBounds(50, Utils.SIZE_Y[1], Utils.SZYS_TEXT_SUB_WID, Utils.O_H_HEIGHT);
+		jtfcount.setBounds(50, Usual.SIZE_Y[1], Usual.SZYS_TEXT_SUB_WID, Usual.O_H_HEIGHT);
 		jtfcount.setEnabled(true);
-
-		jtfmin.setFont(Utils.FONT);
+		
+		jtfev = new JTextField();
+		jtfev.setFont(Usual.FONT);
+		jtfev.setHorizontalAlignment(JTextField.CENTER);
+		jtfev.setBounds(450, Usual.SIZE_Y[1], Usual.SZYS_TEXT_SUB_WID, Usual.O_H_HEIGHT);
+		jtfev.setEnabled(false);
+		
+		jtfpr = new JTextField();
+		jtfpr.setFont(Usual.FONT);
+		jtfpr.setHorizontalAlignment(JTextField.CENTER);
+		jtfpr.setBounds(50, Usual.SIZE_Y[3], Usual.SZYS_TEXT_SUB_WID, Usual.O_H_HEIGHT);
+		jtfpr.setEnabled(true);
+		
+		jtfmin = new JTextField();
+		jtfmin.setFont(Usual.FONT);
 		jtfmin.setHorizontalAlignment(JTextField.CENTER);
-		jtfmin.setBounds(250, Utils.SIZE_Y[1], Utils.SZYS_TEXT_SUB_WID, Utils.O_H_HEIGHT);
+		jtfmin.setBounds(250, Usual.SIZE_Y[3], Usual.SZYS_TEXT_SUB_WID, Usual.O_H_HEIGHT);
 		jtfmin.setEnabled(true);
 
-		jtfmax.setFont(Utils.FONT);
+		jtfmax = new JTextField();
+		jtfmax.setFont(Usual.FONT);
 		jtfmax.setHorizontalAlignment(JTextField.CENTER);
-		jtfmax.setBounds(450, Utils.SIZE_Y[1], Utils.SZYS_TEXT_SUB_WID, Utils.O_H_HEIGHT);
+		jtfmax.setBounds(450, Usual.SIZE_Y[3], Usual.SZYS_TEXT_SUB_WID, Usual.O_H_HEIGHT);
 		jtfmax.setEnabled(true);
 	}
 	
@@ -238,9 +268,11 @@ public class Sjbh_F extends JPanel{
 	 */
 	private void setMenu() {
 		for(int i = 0; i<menu.length;i++) {
-			menu[i] = new JLabel(Utils.SJBH_MENU[i]);
-			menu[i].setFont(Utils.FONT);
-			menu[i].setBounds(i*200+50,Utils.SIZE_Y[0],Utils.SZYS_MENU_WID,Utils.O_H_HEIGHT);
+			menu[i] = new JLabel(Usual.SJBH_MENU[i]);
+			menu[i].setFont(Usual.FONT);
+			int x = i%3;
+			int y = i/3*2;
+			menu[i].setBounds(Usual.SIZE_X[x],Usual.SIZE_Y[y],Usual.SZYS_MENU_WID,Usual.O_H_HEIGHT);
 			menu[i].setHorizontalAlignment(JLabel.CENTER);
 		}
 	}
@@ -249,9 +281,9 @@ public class Sjbh_F extends JPanel{
 	 * 题目文本设置
 	 */
 	private void setTm() {
-		tm.setFont(Utils.FONT);
-		tm.setBounds(0,Utils.SIZE_Y[2],Utils.FRAME_WIDTH,Utils.O_H_HEIGHT);
-		tm.setText(questions.get(nowtm).getTm());
+		tm.setFont(Usual.FONT);
+		tm.setBounds(0,Usual.SIZE_Y[4],Usual.FRAME_WIDTH,Usual.O_H_HEIGHT*2);
+		tm.setText("<html>"+questions.get(nowtm).getTm()+"</html>");
 		questions.get(nowtm).setsTime(new Time(System.currentTimeMillis()));
 		nowtm++;
 		tm.setHorizontalAlignment(JLabel.CENTER);
